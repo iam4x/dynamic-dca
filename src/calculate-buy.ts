@@ -1,14 +1,34 @@
 import {
+  calculateBollingerBands,
+  getBollingerMultiplier,
+} from "./calculate-bollinger-bands";
+import { calculateRSI, getRSIMultiplier } from "./calculate-rsi";
+import {
+  calculateVolatility,
+  getVolatilityMultiplier,
+} from "./calculate-volatility";
+import {
   ALLOCATION_PERIOD,
   BUY_INTERVAL_HOURS,
   SENSITIVITY,
   MAX_BUY_PERCENT,
   MIN_BUY_PERCENT,
   CIRCUIT_BREAKER,
+  VOLATILITY_LOOKBACK,
+  RSI_PERIOD,
+  BB_PERIOD,
+  BB_STDDEV,
+  VOLATILITY_WEIGHT,
+  BB_WEIGHT,
+  RSI_WEIGHT,
 } from "./config";
+import { logger } from "./logger";
 import { getState } from "./state";
 
-export const calculateBuySize = async (price: number) => {
+export const calculateBuySize = async (
+  price: number,
+  kline: Array<[number, number, number, number, number, number]>,
+) => {
   const state = await getState();
 
   const elapsedHours = (Date.now() - state.START_TIME) / 1000 / 3600;
@@ -38,6 +58,21 @@ export const calculateBuySize = async (price: number) => {
 
   const adjustedBuySize = baseBuySize * factor;
 
+  const volatility = calculateVolatility(kline, VOLATILITY_LOOKBACK);
+  const rsi = calculateRSI(kline, RSI_PERIOD);
+  const bb = calculateBollingerBands(kline, BB_PERIOD, BB_STDDEV);
+
+  const volFactor = getVolatilityMultiplier(volatility);
+  const rsiFactor = getRSIMultiplier(rsi);
+  const bbFactor = getBollingerMultiplier(price, bb);
+
+  const indicatorFactor =
+    volFactor * VOLATILITY_WEIGHT +
+    rsiFactor * RSI_WEIGHT +
+    bbFactor * BB_WEIGHT;
+
+  const adjustBuySizeWithIndicators = adjustedBuySize * indicatorFactor;
+
   // Capital preservation check
   const minFutureAllocation =
     baseBuySize * (intervalsRemaining - 1) * MIN_BUY_PERCENT;
@@ -47,11 +82,24 @@ export const calculateBuySize = async (price: number) => {
   const circuitBreakerMax = state.REMAINING_CAPITAL * CIRCUIT_BREAKER;
 
   const finalBuySize = Math.min(
-    adjustedBuySize,
+    adjustBuySizeWithIndicators,
     maxSafeBuy,
     state.REMAINING_CAPITAL,
     circuitBreakerMax,
   );
+
+  logger.info({
+    msg: `Buy size calculated`,
+    baseBuySize,
+    volatility: (volatility * 100).toFixed(1) + "%",
+    rsi: rsi.toFixed(1),
+    bbPosition: ((price - bb.lower) / (bb.upper - bb.lower)).toFixed(2),
+    volMultiplier: volFactor.toFixed(2),
+    rsiMultiplier: rsiFactor.toFixed(2),
+    bbMultiplier: bbFactor.toFixed(2),
+    combinedMultiplier: indicatorFactor.toFixed(2),
+    finalBuySize,
+  });
 
   return finalBuySize;
 };

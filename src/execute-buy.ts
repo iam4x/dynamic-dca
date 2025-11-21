@@ -1,5 +1,6 @@
 import { calculateBuySize } from "./calculate-buy";
 import { getCurrentPrice } from "./current-price";
+import { fetchKline } from "./fetch-kline";
 import { logger } from "./logger";
 import { placeOrder } from "./place-order";
 import { getState, setState } from "./state";
@@ -8,11 +9,14 @@ import { adjust } from "./utils";
 export const executeBuy = async () => {
   logger.info(`Executing buy BTC...`);
 
-  const currentPrice = await getCurrentPrice();
+  const [currentPrice, kline] = await Promise.all([
+    getCurrentPrice(),
+    fetchKline(),
+  ]);
 
   logger.info(`Current price: $${currentPrice}`);
 
-  const buySize = await calculateBuySize(currentPrice);
+  const buySize = await calculateBuySize(currentPrice, kline);
   const btcAmount = buySize / currentPrice;
 
   const adjustedBTCAmount = adjust(btcAmount, 0.001);
