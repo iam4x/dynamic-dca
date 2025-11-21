@@ -1,6 +1,6 @@
 export const TOKEN = process.env.TOKEN || "BTCUSDT";
 
-export const TOTAL_CAPITAL = 10_000;
+export const TOTAL_CAPITAL = 12_500;
 export const ALLOCATION_PERIOD = 30;
 export const BUY_INTERVAL_HOURS = 12;
 export const SENSITIVITY = 3.0;
