@@ -1,8 +1,17 @@
 import { Cron } from "croner";
+import { redis } from "bun";
 
 import { executeBuy } from "./services/execute-buy";
 import { getCapitalMetrics } from "./services/track-performance";
 import { getState } from "./modules/state";
+import { logger } from "./modules/logger";
+
+try {
+  await redis.connect();
+} catch (error) {
+  logger.error({ msg: "Failed to connect to Redis", error });
+  process.exit(1);
+}
 
 // Register cron jobs
 // ------------------
