@@ -1,4 +1,4 @@
-export const TOKEN = "HYPEUSDT";
+export const TOKEN = process.env.TOKEN || "BTCUSDT";
 
 export const TOTAL_CAPITAL = 10_000;
 export const ALLOCATION_PERIOD = 30;
