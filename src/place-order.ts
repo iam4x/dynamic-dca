@@ -24,9 +24,10 @@ export const placeOrder = async (amount: number) => {
   ].join("");
 
   const signature = hmac(sha256, process.env.BYBIT_API_SECRET!, message);
-  const response = await request({
+  const response = await request<{ retCode: number; retMsg: string }>({
     url: `https://api.bybit.com/v5/order/create`,
     method: "POST",
+    body,
     headers: {
       "X-BAPI-SIGN": signature.toHex(),
       "X-BAPI-API-KEY": process.env.BYBIT_API_KEY!,
