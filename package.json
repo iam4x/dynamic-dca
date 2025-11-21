@@ -3,6 +3,7 @@
   "module": "index.ts",
   "type": "module",
   "private": true,
+  "license": "GPL-3.0",
   "exports": {
     ".": "./dist/index.js"
   },
