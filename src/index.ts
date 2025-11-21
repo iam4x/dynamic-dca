@@ -1,9 +1,5 @@
-import { serve } from "bun";
+import { Cron } from "croner";
 
-serve({
-  port: process.env.PORT ?? 3000,
-  routes: {
-    "/health": new Response("OK"),
-    "/*": new Response("Not Found", { status: 404 }),
-  },
-});
+import { executeBuy } from "./execute-buy";
+
+new Cron("0 */12 * * *", executeBuy);
