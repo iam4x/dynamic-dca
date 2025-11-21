@@ -7,23 +7,24 @@ import {
   calculateVolatility,
   getVolatilityMultiplier,
 } from "./calculate-volatility";
+
 import {
   ALLOCATION_PERIOD,
   BUY_INTERVAL_HOURS,
   SENSITIVITY,
   MAX_BUY_PERCENT,
   MIN_BUY_PERCENT,
-  CIRCUIT_BREAKER,
   VOLATILITY_LOOKBACK,
   RSI_PERIOD,
   BB_PERIOD,
   BB_STDDEV,
   VOLATILITY_WEIGHT,
-  BB_WEIGHT,
   RSI_WEIGHT,
-} from "./config";
-import { logger } from "./logger";
-import { getState } from "./state";
+  BB_WEIGHT,
+  CIRCUIT_BREAKER,
+} from "~/config";
+import { logger } from "~/modules/logger";
+import { getState } from "~/modules/state";
 
 export const calculateBuySize = async (
   price: number,

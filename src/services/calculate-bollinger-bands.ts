@@ -1,10 +1,3 @@
-/**
- * Calculate Bollinger Bands
- * @param klines - Array of [timestamp, open, high, low, close, volume]
- * @param period - SMA period (standard is 20)
- * @param stdDevMultiplier - Standard deviation multiplier (standard is 2)
- * @returns { upper, middle, lower }
- */
 export const calculateBollingerBands = (
   klines: Array<
     [
@@ -47,9 +40,6 @@ export const calculateBollingerBands = (
   };
 };
 
-/**
- * Calculate Bollinger Band position multiplier
- */
 export const getBollingerMultiplier = (
   currentPrice: number,
   bb: { upper: number; middle: number; lower: number },
@@ -77,30 +67,4 @@ export const getBollingerMultiplier = (
     // Middle range - linear interpolation
     return 0.3 + (1 - pricePosition) * 1.4;
   }
-};
-
-/**
- * Alternative: Detect squeeze (low volatility, potential breakout)
- */
-export const detectBollingerSqueeze = (
-  klines: Array<
-    [
-      timestamp: number,
-      open: number,
-      high: number,
-      low: number,
-      close: number,
-      volume: number,
-    ]
-  >,
-  period: number = 20,
-  stdDevMultiplier: number = 2.0,
-): boolean => {
-  const bb = calculateBollingerBands(klines, period, stdDevMultiplier);
-  const bandWidth = bb.upper - bb.lower;
-  const bandWidthPercent = bandWidth / bb.middle;
-
-  // Squeeze if band width is < 4% of middle band
-  // (Typical BTC squeeze threshold)
-  return bandWidthPercent < 0.04;
 };

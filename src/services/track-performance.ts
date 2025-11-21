@@ -1,7 +1,11 @@
-import { ALLOCATION_PERIOD, BUY_INTERVAL_HOURS, TOTAL_CAPITAL } from "./config";
-import { getCurrentPrice } from "./current-price";
-import { logger } from "./logger";
-import { getState } from "./state";
+import {
+  ALLOCATION_PERIOD,
+  BUY_INTERVAL_HOURS,
+  TOTAL_CAPITAL,
+} from "../config";
+import { getCurrentPrice } from "../modules/bybit/current-price";
+import { logger } from "../modules/logger";
+import { getState } from "../modules/state";
 
 export const getCapitalMetrics = async () => {
   const state = await getState();

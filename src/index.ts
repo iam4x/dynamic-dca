@@ -1,8 +1,8 @@
 import { Cron } from "croner";
 
-import { executeBuy } from "./execute-buy";
-import { getCapitalMetrics } from "./performance";
-import { getState } from "./state";
+import { executeBuy } from "./services/execute-buy";
+import { getCapitalMetrics } from "./services/track-performance";
+import { getState } from "./modules/state";
 
 // Register cron jobs
 // ------------------

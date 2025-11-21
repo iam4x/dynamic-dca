@@ -1,10 +1,11 @@
+import { getCurrentPrice } from "../modules/bybit/current-price";
+import { fetchKline } from "../modules/bybit/fetch-kline";
+import { logger } from "../modules/logger";
+import { placeOrder } from "../modules/bybit/place-order";
+import { getState, setState } from "../modules/state";
+import { adjust } from "../utils";
+
 import { calculateBuySize } from "./calculate-buy";
-import { getCurrentPrice } from "./current-price";
-import { fetchKline } from "./fetch-kline";
-import { logger } from "./logger";
-import { placeOrder } from "./place-order";
-import { getState, setState } from "./state";
-import { adjust } from "./utils";
 
 export const executeBuy = async () => {
   logger.info(`Executing buy BTC...`);

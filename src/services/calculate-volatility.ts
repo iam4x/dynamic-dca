@@ -1,9 +1,3 @@
-/**
- * Calculate rolling volatility (annualized)
- * @param klines - Array of [timestamp, open, high, low, close, volume]
- * @param lookbackPeriods - Number of candles to look back (e.g., 42 for 7 days of 4h candles)
- * @returns Annualized volatility as decimal (e.g., 0.65 = 65% annual volatility)
- */
 export const calculateVolatility = (
   klines: Array<
     [
@@ -49,10 +43,6 @@ export const calculateVolatility = (
   return annualizedVolatility;
 };
 
-/**
- * Calculate volatility multiplier for buy sizing
- * Higher volatility = more aggressive (larger positions on dips)
- */
 export const getVolatilityMultiplier = (volatility: number) => {
   // Normalize volatility to multiplier
   // Typical BTC vol: 40-80% annualized
