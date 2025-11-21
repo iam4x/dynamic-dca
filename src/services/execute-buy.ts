@@ -1,20 +1,21 @@
-import { getCurrentPrice } from "../modules/bybit/current-price";
-import { fetchKline } from "../modules/bybit/fetch-kline";
-import { logger } from "../modules/logger";
-import { placeOrder } from "../modules/bybit/place-order";
-import { getState, setState } from "../modules/state";
-import { adjust } from "../utils";
-
 import { calculateBuySize } from "./calculate-buy";
 
+import { adjust } from "~/utils";
+import { getCurrentPrice } from "~/modules/bybit/current-price";
+import { fetchKline } from "~/modules/bybit/fetch-kline";
+import { logger } from "~/modules/logger";
+import { placeOrder } from "~/modules/bybit/place-order";
+import { getState, setState } from "~/modules/state";
 import { TOKEN } from "~/config";
+import { fetchTokenPrecision } from "~/modules/bybit/fetch-precision";
 
 export const executeBuy = async () => {
   logger.info(`Executing buy ${TOKEN}...`);
 
-  const [currentPrice, kline] = await Promise.all([
+  const [currentPrice, kline, precision] = await Promise.all([
     getCurrentPrice(),
     fetchKline(),
+    fetchTokenPrecision(),
   ]);
 
   logger.info(`Current price: $${currentPrice}`);
@@ -22,7 +23,7 @@ export const executeBuy = async () => {
   const buySize = await calculateBuySize(currentPrice, kline);
   const tokenAmount = buySize / currentPrice;
 
-  const adjustedTokenAmount = adjust(tokenAmount, 0.01);
+  const adjustedTokenAmount = adjust(tokenAmount, precision);
   const adjustedBuySize = adjustedTokenAmount * currentPrice;
 
   logger.info(`Will buy ${adjustedTokenAmount} ${TOKEN} at $${currentPrice}`);

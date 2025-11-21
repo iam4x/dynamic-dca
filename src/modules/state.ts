@@ -1,6 +1,6 @@
 import { redis } from "bun";
 
-import { TOKEN, TOTAL_CAPITAL } from "../config";
+import { TOKEN, TOTAL_CAPITAL } from "~/config";
 
 const DEFAULT_STATE = {
   REMAINING_CAPITAL: TOTAL_CAPITAL,
