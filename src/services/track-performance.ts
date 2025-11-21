@@ -12,8 +12,8 @@ export const getCapitalMetrics = async () => {
   const price = await getCurrentPrice();
 
   const totalInvested = TOTAL_CAPITAL - state.REMAINING_CAPITAL;
-  const btcValue = state.TOTAL_BTC_ACCUMULATED * price;
-  const unrealizedPNL = btcValue - totalInvested;
+  const tokenValue = state.TOTAL_TOKEN_ACCUMULATED * price;
+  const unrealizedPNL = tokenValue - totalInvested;
   const roi = (unrealizedPNL / totalInvested) * 100;
 
   const elapsedHours = (Date.now() - state.START_TIME) / 1000 / 3600;
@@ -23,8 +23,8 @@ export const getCapitalMetrics = async () => {
   logger.info({
     msg: "Capital metrics",
     totalInvested: totalInvested.toFixed(2),
-    btcAccumulated: state.TOTAL_BTC_ACCUMULATED.toFixed(4),
-    currentValue: btcValue.toFixed(2),
+    tokenAccumulated: state.TOTAL_TOKEN_ACCUMULATED.toFixed(4),
+    currentValue: tokenValue.toFixed(2),
     unrealizedPnL: unrealizedPNL.toFixed(2),
     roi: roi.toFixed(2) + "%",
     daysRemaining: Math.ceil((ALLOCATION_PERIOD * 24 - elapsedHours) / 24),

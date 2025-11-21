@@ -1,5 +1,7 @@
 import { request } from "@iam4x/request";
 
+import { TOKEN } from "~/config";
+
 export const fetchKline = async (): Promise<
   Array<[number, number, number, number, number, number]>
 > => {
@@ -9,7 +11,7 @@ export const fetchKline = async (): Promise<
     url: "https://api.bybit.com/v5/market/kline",
     params: {
       category: "linear",
-      symbol: "BTCUSDT",
+      symbol: TOKEN,
       interval: "240",
       limit: 60,
     },

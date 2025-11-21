@@ -7,8 +7,10 @@ import { adjust } from "../utils";
 
 import { calculateBuySize } from "./calculate-buy";
 
+import { TOKEN } from "~/config";
+
 export const executeBuy = async () => {
-  logger.info(`Executing buy BTC...`);
+  logger.info(`Executing buy ${TOKEN}...`);
 
   const [currentPrice, kline] = await Promise.all([
     getCurrentPrice(),
@@ -18,14 +20,14 @@ export const executeBuy = async () => {
   logger.info(`Current price: $${currentPrice}`);
 
   const buySize = await calculateBuySize(currentPrice, kline);
-  const btcAmount = buySize / currentPrice;
+  const tokenAmount = buySize / currentPrice;
 
-  const adjustedBTCAmount = adjust(btcAmount, 0.001);
-  const adjustedBuySize = adjustedBTCAmount * currentPrice;
+  const adjustedTokenAmount = adjust(tokenAmount, 0.01);
+  const adjustedBuySize = adjustedTokenAmount * currentPrice;
 
-  logger.info(`Will buy ${adjustedBTCAmount} BTC at $${currentPrice}`);
+  logger.info(`Will buy ${adjustedTokenAmount} ${TOKEN} at $${currentPrice}`);
 
-  const response = await placeOrder(adjustedBTCAmount);
+  const response = await placeOrder(adjustedTokenAmount);
 
   if (response.retCode !== 0) {
     logger.error({ msg: "Failed to place order", response });
@@ -37,23 +39,24 @@ export const executeBuy = async () => {
   const state = await getState();
 
   state.REMAINING_CAPITAL -= adjustedBuySize;
-  state.TOTAL_BTC_ACCUMULATED += adjustedBTCAmount;
+  state.TOTAL_TOKEN_ACCUMULATED += adjustedTokenAmount;
   state.WEIGHTED_SUM_COST += adjustedBuySize;
 
-  const newAveragePrice = state.WEIGHTED_SUM_COST / state.TOTAL_BTC_ACCUMULATED;
+  const newAveragePrice =
+    state.WEIGHTED_SUM_COST / state.TOTAL_TOKEN_ACCUMULATED;
 
   state.PURCHASE_HISTORY.push({
     timestamp: Date.now(),
     price: currentPrice,
     usdSpent: adjustedBuySize,
-    btcBought: adjustedBTCAmount,
+    tokenBought: adjustedTokenAmount,
     averagePrice: newAveragePrice,
     capitalRemaining: state.REMAINING_CAPITAL,
   });
 
   await setState(state);
 
-  logger.info(`Bought ${adjustedBTCAmount} BTC at $${currentPrice}`);
+  logger.info(`Bought ${adjustedTokenAmount} ${TOKEN} at $${currentPrice}`);
   logger.info(`New average: $${newAveragePrice}`);
   logger.info(`Remaining capital: $${state.REMAINING_CAPITAL}`);
 };

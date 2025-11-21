@@ -45,7 +45,7 @@ export const calculateVolatility = (
 
 export const getVolatilityMultiplier = (volatility: number) => {
   // Normalize volatility to multiplier
-  // Typical BTC vol: 40-80% annualized
+  // Typical TOKEN vol: 40-80% annualized
   // Use 60% as baseline
   const baselineVol = 0.6;
   const volRatio = volatility / baselineVol;

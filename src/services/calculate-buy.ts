@@ -41,9 +41,9 @@ export const calculateBuySize = async (
 
   const baseBuySize = state.REMAINING_CAPITAL / intervalsRemaining;
   const averageBuyingPrice =
-    state.TOTAL_BTC_ACCUMULATED === 0
+    state.TOTAL_TOKEN_ACCUMULATED === 0
       ? price
-      : state.WEIGHTED_SUM_COST / state.TOTAL_BTC_ACCUMULATED;
+      : state.WEIGHTED_SUM_COST / state.TOTAL_TOKEN_ACCUMULATED;
 
   const priceDeviation = (price - averageBuyingPrice) / averageBuyingPrice;
 

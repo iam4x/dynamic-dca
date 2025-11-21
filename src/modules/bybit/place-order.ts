@@ -2,13 +2,15 @@ import { request } from "@iam4x/request";
 import { hmac } from "@noble/hashes/hmac.js";
 import { sha256 } from "@noble/hashes/sha2.js";
 
+import { TOKEN } from "~/config";
+
 const RECV_WINDOW = 5000;
 const BROKER_ID = "Gi000266";
 
 export const placeOrder = async (amount: number) => {
   const body = {
     category: "linear",
-    symbol: "BTCUSDT",
+    symbol: TOKEN,
     side: "Buy",
     orderType: "Market",
     qty: amount.toString(),

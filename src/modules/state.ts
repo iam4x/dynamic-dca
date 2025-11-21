@@ -4,13 +4,13 @@ import { TOTAL_CAPITAL } from "../config";
 
 const DEFAULT_STATE = {
   REMAINING_CAPITAL: TOTAL_CAPITAL,
-  TOTAL_BTC_ACCUMULATED: 0,
+  TOTAL_TOKEN_ACCUMULATED: 0,
   WEIGHTED_SUM_COST: 0,
   PURCHASE_HISTORY: [] as {
     timestamp: number;
     price: number;
     usdSpent: number;
-    btcBought: number;
+    tokenBought: number;
     averagePrice: number;
     capitalRemaining: number;
   }[],
