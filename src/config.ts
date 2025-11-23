@@ -4,7 +4,10 @@ export const TOTAL_CAPITAL = process.env.TOTAL_CAPITAL
   ? Number(process.env.TOTAL_CAPITAL)
   : 10_000;
 
-export const ALLOCATION_PERIOD = 30;
+export const ALLOCATION_PERIOD = process.env.ALLOCATION_PERIOD
+  ? Number(process.env.ALLOCATION_PERIOD)
+  : 30;
+
 export const BUY_INTERVAL_HOURS = 12;
 export const SENSITIVITY = 3.0;
 export const MIN_BUY_PERCENT = 0.4;
